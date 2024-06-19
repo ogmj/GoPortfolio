@@ -64,17 +64,18 @@ func (t *TCP) Connect() {
 }
 
 func (t *TCP) Close() {
-
+	_ = t.connection.Close()
+	t.connected = false
 }
 
-func (t *TCP) Send() {
-
+func (t *TCP) Send(buf []byte) {
+	_, _ = t.connection.Write(buf)
 }
 
-func (t *TCP) Peek() {
-
+func (t *TCP) Peek(size int) ([]byte, error) {
+	return t.buffer.peek(size)
 }
 
-func (t *TCP) Read() {
-	
+func (t *TCP) Read(buffer []byte, size int) error {
+	return t.buffer.read(buffer, size)
 }
