@@ -24,6 +24,7 @@ type Listener struct {
 	flagStop bool
 }
 
+// socketBuffer 관련 함수 /////////////////////////////////////////
 func (b *socketBuffer) initSocketBuffer() {
 	b.data = make([]byte, 65536)
 }
@@ -55,4 +56,25 @@ func (b *socketBuffer) read(buffer []byte, size int) error {
 	copy(buffer, b.data[size:])
 
 	return nil
+}
+
+// TCP 통신 관련 함수 /////////////////////////////////////////////
+func (t *TCP) Connect() {
+
+}
+
+func (t *TCP) Close() {
+
+}
+
+func (t *TCP) Send() {
+
+}
+
+func (t *TCP) Peek() {
+
+}
+
+func (t *TCP) Read() {
+	
 }
