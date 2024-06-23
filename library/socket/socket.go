@@ -88,3 +88,12 @@ func (t *TCP) Peek(size int) ([]byte, error) {
 func (t *TCP) Read(buffer []byte, size int) error {
 	return t.buffer.read(buffer, size)
 }
+
+// TCP Listener 함수 관련 /////////////////////////////////////////////////
+func (l *Listener) Listen(port uint) error {
+	return nil
+}
+
+func (l *Listener) AsyncAccept(acceptCallback func(*TCP)) error {
+	return nil
+}
