@@ -2,6 +2,7 @@ package socket
 
 import (
 	"errors"
+	"fmt"
 	"net"
 )
 
@@ -59,8 +60,16 @@ func (b *socketBuffer) read(buffer []byte, size int) error {
 }
 
 // TCP 통신 관련 함수 /////////////////////////////////////////////
-func (t *TCP) Connect() {
-
+func (t *TCP) Connect(address string, port uint) bool {
+	var err error
+	host := address + ":" + fmt.Sprint(port)
+	t.connection, err = net.Dial("tcp", host)
+	if err != nil {
+		return false
+	}
+	t.connected = true
+	t.buffer.initSocketBuffer()
+	return t.connected
 }
 
 func (t *TCP) Close() {
