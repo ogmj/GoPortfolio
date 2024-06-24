@@ -21,8 +21,7 @@ type TCP struct {
 
 // Listener
 type Listener struct {
-	ln       net.Listener
-	flagStop bool
+	listener net.Listener
 }
 
 // socketBuffer 관련 함수 /////////////////////////////////////////
@@ -91,9 +90,21 @@ func (t *TCP) Read(buffer []byte, size int) error {
 
 // TCP Listener 함수 관련 /////////////////////////////////////////////////
 func (l *Listener) Listen(port uint) error {
+	ipNport := fmt.Sprintf("0.0.0.0:%d", port)
+	listener, err := net.Listen("tcp", ipNport)
+	if err != nil {
+		return err
+	}
+	l.listener = listener
 	return nil
 }
 
-func (l *Listener) AsyncAccept(acceptCallback func(*TCP)) error {
-	return nil
+func (l *Listener) AsyncAccept(acceptCallback func(*TCP)) {
+	conn, _ := l.listener.Accept()
+	connection := new(TCP)
+	connection.connection = conn
+	connection.connected = true
+	connection.buffer.initSocketBuffer()
+
+	acceptCallback(connection)
 }
