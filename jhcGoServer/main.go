@@ -3,9 +3,34 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"library/socket"
 	"os"
 	"strings"
 )
+
+var (
+	jhcGOTcpServer *socket.Listener
+)
+
+func initNetwork() {
+	initTcpSocketNetwork()
+}
+
+func initTcpSocketNetwork() {
+	jhcGOTcpServer = new(socket.Listener)
+	err := jhcGOTcpServer.Listen(9999)
+
+	if err != nil {
+		panic("Failed to initTcpSocketNetword");
+	}
+
+	jhcGOTcpServer.AsyncAccept(func(connection *socket.TCP)) {
+		//TODO : 통신 버퍼를 셋하자.
+		//TODO : 셋한 통신 버퍼에 TCP 소켓에 있는 값을 리시브한다.
+		//TODO : 에러인 경우 처리하는 함수를 추가한다.
+		//TODO : 위의 작업을 처리하는 함수는 TCP스트럭트에서 처리하도록 한다.
+	}
+}
 
 func readString(reader *bufio.Reader) string {
 	text, _ := reader.ReadString('\n')
@@ -15,6 +40,9 @@ func readString(reader *bufio.Reader) string {
 
 func main() {
 	fmt.Println("JhcGoServer")
+
+	initNetwork()
+
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		fmt.Print("> ")
