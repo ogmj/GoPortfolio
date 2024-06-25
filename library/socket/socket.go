@@ -89,11 +89,22 @@ func (t *TCP) Read(buffer []byte, size int) error {
 	return t.buffer.read(buffer, size)
 }
 
-func (t *TCP) ConnectionHandler(buffer []byte) bool {
-	for t.extractPacket(buffer) != nil {
-		t.packetReceiver(buffer)
+func (t *TCP) ConnectionHandler(f func(), d func()) {
+	bufBytes := make([]byte, 65536)
+	for {
+		n, err := t.connection.Read(bufBytes)
+		if err != nil {
+			if n == 0 {
+				t.connected = false
+				d()
+			}
+			break
+		}
+		if n > 0 {
+			t.buffer.write(bufBytes[:n])
+			f()
+		}
 	}
-	return true
 }
 
 func (t *TCP) extractPacket(buffer []byte) error {
