@@ -16,6 +16,8 @@ var (
 	buffer  []byte
 )
 
+type NetworkMessage = uint16
+
 func Init() {
 	buffer = make([]byte, 65536)
 }
@@ -43,11 +45,13 @@ func (s *Session) Connect(ip string, port uint) error {
 }
 
 // TODO : 패킷을 보내는 부분
-func (s *Session) Send(connection *socket.TCP, header []byte, body []byte) {
-	var packet []byte
+func (s *Session) Send(msg NetworkMessage, body []byte) {
+	//func (s *Session) Send(connection *socket.TCP, header []byte, body []byte) {
 	if s.IsConnect() {
-		connection.Send(packet)
+		var packet []byte
+		header := s.connection.CreateHeaderForFlatBuffer(msg, s.connection.NetworkSize(packet))
 		packet = append(header, body...)
+		s.connection.Send(packet)
 	}
 }
 
