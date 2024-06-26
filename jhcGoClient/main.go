@@ -3,9 +3,14 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"library/socket"
 	"os"
 	"runtime"
 	"strings"
+)
+
+var (
+	jhcGOClient *socket.TCP
 )
 
 func readString(reader *bufio.Reader) string {
@@ -17,18 +22,26 @@ func readString(reader *bufio.Reader) string {
 }
 
 func main() {
-	fmt.Println("test")
+	fmt.Println("JhcGoClient Start")
+
+	initConnect()
+
 	if runtime.GOOS == "windows" {
 		reader := bufio.NewReader(os.Stdin)
 		for {
 			fmt.Print("> ")
 			text := readString(reader)
 			cmd := strings.Split(text, " ")
-			if len(cmd) > 1 {
+			if len(cmd) > 0 {
 				if cmd[0] == "exit" {
 					break
 				}
 			}
 		}
 	}
+}
+
+func initConnect() {
+	//TODO : 세션을 하나 가져온다.
+	//TODO : 해당 세션을 이용하여 서버와 연결을 시도한다.
 }
