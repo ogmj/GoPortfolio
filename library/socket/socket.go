@@ -71,6 +71,10 @@ func (t *TCP) Connect(address string, port uint) bool {
 	return t.connected
 }
 
+func (t *TCP) IsConnected() bool {
+	return t.connected
+}
+
 func (t *TCP) Close() {
 	_ = t.connection.Close()
 	t.connected = false
