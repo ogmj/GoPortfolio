@@ -1,9 +1,15 @@
 ﻿package socket
 
 import (
+	"encoding/binary"
 	"errors"
 	"fmt"
+	flatbuffers "github.com/google/flatbuffers/go"
 	"net"
+)
+
+var (
+	fbHeader flatbuffers.UOffsetT = 4
 )
 
 // socketBuffer 리시브용 소켓 버퍼
@@ -108,6 +114,20 @@ func (t *TCP) ConnectionHandler(f func(), d func()) {
 			f()
 		}
 	}
+}
+
+// TODO : 플랫버퍼 헤더 세팅
+func (t *TCP) CreateHeaderForFlatBuffer(msg uint16, size uint16) []byte {
+	hp := make([]byte, fbHeader)
+	binary.LittleEndian.PutUint16(hp[:2], msg)
+	binary.LittleEndian.PutUint16(hp[2:4], size)
+	return hp
+}
+
+// TODO : 바이트를 실제로 네트워크로 보낼때 사이즈(헤더포함)
+func (t *TCP) NetworkSize(packet []byte) uint16 {
+	size := len(packet) + int(fbHeader)
+	return uint16(size)
 }
 
 // TCP Listener 함수 관련 /////////////////////////////////////////////////
