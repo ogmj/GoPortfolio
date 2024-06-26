@@ -32,7 +32,7 @@ func GetSession() *Session {
 // TODO : 연결 함수
 func (s *Session) Connect(ip string, port uint) error {
 	if session.connection.Connect(ip, port) {
-		s.connection.ConnectionHandler(func() {
+		go s.connection.ConnectionHandler(func() {
 			for s.extractPacket(s.connection, buffer) != nil {
 				s.receiver(buffer)
 			}
