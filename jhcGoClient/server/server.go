@@ -17,6 +17,15 @@ func Init() {
 
 // TODO : 한개만 전역적으로 사용하므로 싱글톤을 생성하자.
 func GetSession() *Session {
+	if session.connection == nil {
+		session.connection = new(socket.TCP)
+		Init()
+	}
+	return &session
+}
+
+//TODO : 연결 함수
+func Connect(ip string, port uint) error {
 	return nil
 }
 
