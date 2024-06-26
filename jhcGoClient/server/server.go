@@ -43,7 +43,12 @@ func (s *Session) Connect(ip string, port uint) error {
 }
 
 // TODO : 패킷을 보내는 부분
-func Send() {
+func (s *Session) Send(connection *socket.TCP, header []byte, body []byte) {
+	var packet []byte
+	if s.IsConnect() {
+		connection.Send(packet)
+		packet = append(header, body...)
+	}
 }
 
 // TODO : TCP통신의 특성을 감안하여 여러 개의 스트림에 한 개의 패킷이 올 것을 대비하여 처리
@@ -78,4 +83,8 @@ func (s *Session) receiver(packet []byte) {
 // TODO : 세션을 닫을때 처리하는 부분
 func (s *Session) closer() {
 	s.connection = nil
+}
+
+func (s *Session) IsConnect() bool {
+	return s.connection.IsConnected()
 }
