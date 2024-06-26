@@ -1,7 +1,6 @@
 package socket
 
 import (
-	"encoding/binary"
 	"errors"
 	"fmt"
 	"net"
@@ -105,32 +104,6 @@ func (t *TCP) ConnectionHandler(f func(), d func()) {
 			f()
 		}
 	}
-}
-
-func (t *TCP) extractPacket(buffer []byte) error {
-	const headerSize int = 4
-
-	rawHeader, err := t.Peek(headerSize)
-	if err != nil {
-		return nil
-	}
-	rawSize := rawHeader[2:4]
-	size := binary.LittleEndian.Uint16(rawSize)
-
-	err = t.Read(buffer, int(size))
-	return nil
-}
-
-func (t *TCP) packetReceiver(packet []byte) {
-	const headerSize int = 4
-	rawMsg := packet[0:2]
-	msg := binary.LittleEndian.Uint16(rawMsg)
-
-	switch msg {
-	case 10001:
-		fmt.Println("test")
-	}
-
 }
 
 // TCP Listener 함수 관련 /////////////////////////////////////////////////
