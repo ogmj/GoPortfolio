@@ -27,19 +27,21 @@ func initTcpSocketNetwork() {
 
 	//TODO : 비동기 accept함수 구현
 	jhcGOTcpServer.AsyncAccept(func(connection *socket.TCP) {
-		//TODO : 통신 버퍼를 셋하자.
-		buffer := make([]byte, 32768)
-		//TODO : 셋한 통신 버퍼에 TCP 소켓에 있는 값을 리시브한다.
-		connection.ConnectionHandler(func() {
-			//TODO : TCP통신 특성상 나뉘어 오는 패킷 처리
-			for extractPacket(connection, buffer) != nil {
-				//TODO : 받은 패킷 처리
-				packetReceiver(connection, buffer)
-			}
-		}, func() {
-			//TODO : 에러인 경우 접속을 해제한다.
-			closeTcpSocket(connection)
-		})
+		go func() {
+			//TODO : 통신 버퍼를 셋하자.
+			buffer := make([]byte, 32768)
+			//TODO : 셋한 통신 버퍼에 TCP 소켓에 있는 값을 리시브한다.
+			connection.ConnectionHandler(func() {
+				//TODO : TCP통신 특성상 나뉘어 오는 패킷 처리
+				for extractPacket(connection, buffer) != nil {
+					//TODO : 받은 패킷 처리
+					packetReceiver(connection, buffer)
+				}
+			}, func() {
+				//TODO : 에러인 경우 접속을 해제한다.
+				closeTcpSocket(connection)
+			})
+		}()
 	})
 }
 
