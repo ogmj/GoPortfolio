@@ -1,4 +1,4 @@
-package socket
+﻿package socket
 
 import (
 	"errors"
@@ -118,11 +118,15 @@ func (l *Listener) Listen(port uint) error {
 }
 
 func (l *Listener) AsyncAccept(acceptCallback func(*TCP)) {
-	conn, _ := l.listener.Accept()
-	connection := new(TCP)
-	connection.connection = conn
-	connection.connected = true
-	connection.buffer.initSocketBuffer()
+	go func() {
+		for {
+			conn, _ := l.listener.Accept()
+			connection := new(TCP)
+			connection.connection = conn
+			connection.connected = true
+			connection.buffer.initSocketBuffer()
 
-	acceptCallback(connection)
+			acceptCallback(connection)
+		}
+	}()
 }
